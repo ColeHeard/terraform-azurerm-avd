@@ -1,0 +1,9 @@
+#Terraform files and folders to be ignored.
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.hcl
+
+#MacOS archive
+.DS_Store
