@@ -2,7 +2,7 @@
 
 ## Azure Virtual Desktop
 
-Author: Coleman Heard
+Author: Cole Heard
 
 Date: 12/10/2022
 
