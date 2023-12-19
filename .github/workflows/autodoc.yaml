@@ -1,0 +1,65 @@
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<
+### Autodoc Workflow - Terraform-docs
+### Version: 1.0.1
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<
+name: "Autodoc Workflow - Terraform-docs"
+
+# This workflow will triggers on a pull request. 
+on:
+  pull_request:
+
+# Selecting ubuntu-latest provisions a VM with latest stable image GitHub offers. 
+jobs:
+  tfdocs:
+    runs-on: ubuntu-latest
+    
+# Pull request checkout doesn't pull the current main branch, but the PR head.
+    steps:
+    - name: Pull request checkout
+      uses: actions/checkout@v3
+      id: checkout
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+# This step leverages the Terraform-docs action. Terraform docs will now update or create the readme. 
+# If README.md is missing, it will be created.
+# If the README.md does exist, the Terraform-docs content will be injected between the delimiters <!-- BEGIN_TF_DOCS --> and <!-- END_TF_DOCS -->
+# For more information on Terraform-docs, visit their site: https://terraform-docs.io
+    - name: README.md generation
+      uses: terraform-docs/gh-actions@main
+      id: tfdocs
+      with:
+        config-file: terraform-docs.yaml
+        working-dir: .
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
+
+# As README.md has now been updated, we will echo the file contents to $GITHUB_ENV.
+    - name: Output README.md
+      id: output
+      run: |
+        echo 'readme<<EOF' >> $GITHUB_ENV
+        echo "$(<README.md)" >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+
+# This step creates a comment on the PR coversation thread with the Github Actions.
+# The markdown format used by Terraform-docs is readable by the GitHub.
+# https://github.com/actions/github-script
+    - name: Pull request comment
+      id: comment
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GH_TOKEN }}
+        script: |
+          const output = `Terraform-docs has updated the README.md. 
+
+          ${process.env.readme}`
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+
+# Manual execution from the command line: terraform-docs . -c terraform-docs.yaml --output-file README.md

@@ -1,10 +1,25 @@
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
-### Variables
+### Variables - Required
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 variable "rg" {
   type        = string
   description = "Name of the resource group."
 }
+variable "pool_type" {
+  type        = string
+  description = "The pool type."
+  validation {
+    condition = anytrue([
+      lower(var.pool_type) == "desktop",
+      lower(var.pool_type) == "shareddesktop",
+      lower(var.pool_type) == "application"
+    ])
+    error_message = "The var.pool_type input was incorrect. Please select desktop, shareddesktop, or application."
+  }
+}
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
+### Variables - Optional
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 variable "region" {
   type        = string
   description = "The desired Azure region for the pool. See also var.region_prefix_map."
@@ -61,31 +76,6 @@ variable "application_map" {
   description = "A map of all applications and metadata. Required if var.pool_type == application."
   default     = null
 }
-variable "managed_image_id" {
-  type        = any
-  description = "The ID of an Azure Compute Gallery image."
-  default     = null
-}
-variable "market_place_image" {
-  type        = map(any)
-  description = "The publisher, offer, sku, and version of an image in Azure's market place. Only used if var.custom_image is null."
-  default = {
-    publisher = "microsoftwindowsdesktop"
-    offer     = "windows-10"
-    sku       = "win10-21h2-ent"
-    version   = "latest"
-  }
-}
-variable "pool_number" {
-  type        = number
-  description = "The number of this pool. Use to avoid name collision."
-  default     = 1
-}
-variable "vmsize" {
-  type        = string
-  description = "The VM SKU desired for the pool. If none are selected, VMSize will be chosen based on var.pool_type."
-  default     = "standard_d2as_v4"
-}
 variable "desktop_assignment_type" {
   type        = string
   description = "Sets the personal desktop assignment type."
@@ -109,18 +99,6 @@ variable "load_balancer_type" {
       lower(var.load_balancer_type) == "persistent"
     ])
     error_message = "The var.load_balancer_type input was incorrect. Please select breadthfirst, depthfirst, or persistent."
-  }
-}
-variable "vmcount" {
-  type        = number
-  description = "The number of VMs requested for this pool."
-  default     = 1
-  validation {
-    condition = (
-      var.vmcount >= 0 &&
-      var.vmcount <= 99
-    )
-    error_message = "The number of VMs must be between 0 and 99."
   }
 }
 variable "validate_environment" {
@@ -153,6 +131,9 @@ variable "tags" {
   description = "The tags for the virtual machines and their subresources."
   default     = { Warning = "No tags" }
 }
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
+### Variables - Naming
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 variable "region_prefix_map" {
   type        = map(any)
   description = "A list of prefix strings to concat in locals. Can be replaced or appended."
@@ -173,13 +154,59 @@ variable "region_prefix_map" {
     ukwest           = "UKW"
   }
 }
+variable "pool_number" {
+  type        = number
+  description = "The number of this pool. Use to avoid name collision."
+}
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
+### Variables - Virtual Machines
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
+variable "vmcount" {
+  type        = number
+  description = "The number of VMs requested for this pool."
+  default     = 1
+  validation {
+    condition = (
+      var.vmcount >= 0 &&
+      var.vmcount <= 99
+    )
+    error_message = "The number of VMs must be between 0 and 99."
+  }
+}
+variable "managed_image_id" {
+  type        = any
+  description = "The ID of an Azure Compute Gallery image."
+  default     = null
+}
+variable "secure_boot" {
+  type        = bool
+  description = "Controls the trusted launch settings for the sessionhost VMs."
+  default     = true
+}
+variable "market_place_image" {
+  type        = map(any)
+  description = "The publisher, offer, sku, and version of an image in Azure's market place. Only used if var.custom_image is null."
+  default = {
+    publisher = "microsoftwindowsdesktop"
+    offer     = "windows-10"
+    sku       = "win10-21h2-ent"
+    version   = "latest"
+  }
+}
+variable "managed_image_id" {
+  type        = any
+  description = "The ID of an Azure Compute Gallery image."
+  default     = null
+}
 variable "local_admin" {
   type        = string
   description = "The local administrator username."
+  default     = null
 }
 variable "local_pass" {
   type        = string
   description = "The local administrator password."
+  default     = null
   sensitive   = true
 }
 variable "domain" {
@@ -209,7 +236,12 @@ variable "workspace_key" {
   sensitive   = true
   default     = null
 }
-# To-do Azure Automation runbook to key off OU VM tag. 
+variable "vmsize" {
+  type        = string
+  description = "The VM SKU desired for the pool. If none are selected, VMSize will be chosen based on var.pool_type."
+  default     = "standard_d2as_v4"
+}
+# To-do Azure Automation runbook to key off OU VM tag. This will be included within another repository.
 variable "ou" {
   type        = string
   description = "The OU a VM should be placed within."

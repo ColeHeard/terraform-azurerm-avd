@@ -1,21 +1,9 @@
-# Terraform docs .yaml included for demonstrative purposes.
-
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
+### Terraform-docs configuration file
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 formatter: "markdown table"
 
 content: |-
-  # terraform-azurerm-avd
-  
-  ## Azure Virtual Desktop
-  
-  Author: Coleman Heard
-
-  Date: 12/10/2022
-
-  Version: 1.0.0
-
-  This module includes all of the hostpool specific resources needed
-  to create a functioning Azure Virtual Desktop environment.
-
   {{ .Providers }}
 
   {{ .Resources }}
@@ -24,7 +12,7 @@ content: |-
   ```hcl
   module "example" {
     {{"\n\t"}} # Required Input
-    {{"\t"}} source  = "ColeHeard\avd\azurerm"
+    {{"\t"}} source  =
     {{"\t"}} version  = 
     {{- if .Module.RequiredInputs }}
 
@@ -46,20 +34,15 @@ content: |-
   
   {{ .Outputs }}
 
-  # Disclaimer
-
-  > See the LICENSE file for all disclaimers. Copyright (c) 2023 Cole Heard
-
-
 settings:
   anchor: true
-  color: true
+  color: false
   default: true
   decription: false
   escape: true
   hide-empty: false
-  html: true
-  indent: 2
+  html: false
+  indent: 4
   lockfile: true
   read-comments: true
   required: true

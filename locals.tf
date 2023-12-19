@@ -1,16 +1,21 @@
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 ### Locals
-###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
-# Dynamic region, workspace, and pool type naming locals. Could be organized better.
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###hese
+# This local is used to create the workspace prefix.
 locals {
-  region_prefix         = var.region_prefix_map[var.region]
-  production_workspace  = terraform.workspace == "default" ? "PRD" : ""
-  development_workspace = terraform.workspace == "development" ? "DEV" : ""
-  uat_workspace         = terraform.workspace == "uat" ? "UAT" : ""
-  other_workspace       = terraform.workspace != "default" && terraform.workspace != "development" && terraform.workspace != "uat" ? "TST" : ""
-  workspace_prefix      = coalesce(local.production_workspace, local.development_workspace, local.uat_workspace, local.other_workspace)
-  pool_type_prefix      = var.pool_type == "desktop" ? "GEN" : (var.pool_type == "SharedDesktop" ? "PWR" : "APP")
-  prefix                = "${local.region_prefix}-${local.workspace_prefix}${local.pool_type_prefix}${format("%02d", var.pool_number)}"
+  list = {
+    prod_workspace  = terraform.workspace == "default" ? "PD" : ""
+    dev_workspace   = terraform.workspace == "development" ? "DV" : ""
+    uat_workspace   = terraform.workspace == "uat" ? "UT" : ""
+    other_workspace = terraform.workspace != "default" && terraform.workspace != "development" && terraform.workspace != "uat" ? "TE" : ""
+  }
+  workspace_prefix = coalesce(local.list.prod_workspace, local.list.development_workspace, local.list.uat_workspace, local.list.other_workspace)
+}
+# Dynamic region and pool type naming locals. Could be organized better.
+locals {
+  region_prefix    = var.region_prefix_map[var.region]
+  pool_type_prefix = var.pool_type == "desktop" ? "GEN" : (var.pool_type == "SharedDesktop" ? "PWR" : "APP")
+  prefix           = "${local.region_prefix}-${local.workspace_prefix}${local.pool_type_prefix}${format("%02d", var.pool_number)}"
 }
 # Locates unique AAD groups for application group for_each loop. 
 locals {
@@ -37,8 +42,7 @@ locals {
 # Dynamic tags - to-do.
 locals {
   tags = {
-    Function  = "Azure Virtual Desktop"
-    CreatedBy = "Your Name"
-    Status    = terraform.workspace == "default" ? "Production" : "${terraform.workspace}"
+    Platform = "Azure Virtual Desktop"
+    Function = terraform.workspace == "default" ? "Production" : "${terraform.workspace}"
   }
 }
