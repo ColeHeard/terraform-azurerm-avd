@@ -173,7 +173,7 @@ variable "market_place_image" {
     sku       = "win10-22h2-ent"
     version   = "latest"
   }
-}
+} 
 variable "managed_image_id" {
   type        = any
   description = "The ID of an Azure Compute Gallery image."
