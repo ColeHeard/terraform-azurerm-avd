@@ -9,7 +9,7 @@ locals {
     uat_workspace   = terraform.workspace == "uat" ? "UT" : ""
     other_workspace = terraform.workspace != "default" && terraform.workspace != "development" && terraform.workspace != "uat" ? "TE" : ""
   }
-  workspace_prefix = coalesce(local.list.prod_workspace, local.list.development_workspace, local.list.uat_workspace, local.list.other_workspace)
+  workspace_prefix = coalesce(local.list.prod_workspace, local.list.dev_workspace, local.list.uat_workspace, local.list.other_workspace)
 }
 # Dynamic region and pool type naming locals. Could be organized better.
 locals {

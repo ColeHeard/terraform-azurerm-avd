@@ -4,7 +4,7 @@
 output "hp_output" {
   description = "Hostpool information for consumption by an independent sessionhost module."
   value = {
-    workspace_prefix = local.workplace_prefix
+    workspace_prefix = local.workspace_prefix
     region_prefix    = local.region_prefix
     pool_type_prefix = local.pool_type_prefix
     pool_number      = "${format("%02d", var.pool_number)}"

@@ -17,6 +17,10 @@ variable "pool_type" {
     error_message = "The var.pool_type input was incorrect. Please select desktop, shareddesktop, or application."
   }
 }
+variable "pool_number" {
+  type        = number
+  description = "The number of this pool. Use to avoid name collision."
+}
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 ### Variables - Optional
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
@@ -42,22 +46,6 @@ variable "region" {
     ])
     error_message = "Please select one of the approved regions: northcentralus, southcentralus, westcentral, centralus, westus, eastus, northeurope, westeurope, norwayeast, norwaywest, swedencentral, switzerlandnorth, uksouth, or ukwest"
   }
-}
-variable "pool_type" {
-  type        = string
-  description = "The pool type."
-  validation {
-    condition = anytrue([
-      lower(var.pool_type) == "desktop",
-      lower(var.pool_type) == "shareddesktop",
-      lower(var.pool_type) == "application"
-    ])
-    error_message = "The var.pool_type input was incorrect. Please select desktop, shareddesktop, or application."
-  }
-}
-variable "network_data" {
-  type        = any
-  description = "The network data needed for sessionhost connectivity."
 }
 # An awkward limitation due to variable validation limitations: https://github.com/hashicorp/terraform/issues/25609#issuecomment-1136340278.
 variable "aad_group_desktop" {
@@ -111,9 +99,10 @@ variable "maximum_sessions_allowed" {
   description = "The maximum number of concurrent sessions on a single sessionhost"
   default     = 3
 }
+# https://learn.microsoft.com/en-us/azure/virtual-desktop/rdp-properties
 variable "custom_rdp_properties" {
   type        = string
-  description = "Sets custom RDP properieties for the pool" #https://learn.microsoft.com/en-us/azure/virtual-desktop/rdp-properties
+  description = "Sets custom RDP properieties for the pool"
   default     = null
 }
 variable "enable_agent_update_schedule" {
@@ -154,17 +143,13 @@ variable "region_prefix_map" {
     ukwest           = "UKW"
   }
 }
-variable "pool_number" {
-  type        = number
-  description = "The number of this pool. Use to avoid name collision."
-}
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 ### Variables - Virtual Machines
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 variable "vmcount" {
   type        = number
   description = "The number of VMs requested for this pool."
-  default     = 1
+  default     = 0
   validation {
     condition = (
       var.vmcount >= 0 &&
@@ -173,23 +158,19 @@ variable "vmcount" {
     error_message = "The number of VMs must be between 0 and 99."
   }
 }
-variable "managed_image_id" {
-  type        = any
-  description = "The ID of an Azure Compute Gallery image."
-  default     = null
-}
 variable "secure_boot" {
   type        = bool
   description = "Controls the trusted launch settings for the sessionhost VMs."
   default     = true
 }
+# To-do 
 variable "market_place_image" {
   type        = map(any)
   description = "The publisher, offer, sku, and version of an image in Azure's market place. Only used if var.custom_image is null."
   default = {
     publisher = "microsoftwindowsdesktop"
     offer     = "windows-10"
-    sku       = "win10-21h2-ent"
+    sku       = "win10-22h2-ent"
     version   = "latest"
   }
 }
@@ -197,6 +178,11 @@ variable "managed_image_id" {
   type        = any
   description = "The ID of an Azure Compute Gallery image."
   default     = null
+}
+variable "network_data" {
+  type        = any
+  description = "The network data needed for sessionhost connectivity."
+  default = null
 }
 variable "local_admin" {
   type        = string
@@ -245,5 +231,5 @@ variable "vmsize" {
 variable "ou" {
   type        = string
   description = "The OU a VM should be placed within."
-  default     = "" #Currently does not work, needs blank string to create VMs.
+  default     = "" # Currently does not work, needs blank string to create VMs.
 }
