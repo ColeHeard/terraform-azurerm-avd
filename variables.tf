@@ -44,7 +44,7 @@ variable "region" {
       lower(var.region) == "uksouth",
       lower(var.region) == "ukwest"
     ])
-    error_message = "Please select one of the approved regions: northcentralus, southcentralus, westcentral, centralus, westus, eastus, northeurope, westeurope, norwayeast, norwaywest, swedencentral, switzerlandnorth, uksouth, or ukwest"
+    error_message = "Please select one of the approved regions: northcentralus, southcentralus, westcentral, centralus, westus, eastus, northeurope, westeurope, norwayeast, norwaywest, swedencentral, switzerlandnorth, uksouth, or ukwest."
   }
 }
 # An awkward limitation due to variable validation limitations: https://github.com/hashicorp/terraform/issues/25609#issuecomment-1136340278.
@@ -173,7 +173,7 @@ variable "market_place_image" {
     sku       = "win10-22h2-ent"
     version   = "latest"
   }
-} 
+}
 variable "managed_image_id" {
   type        = any
   description = "The ID of an Azure Compute Gallery image."
@@ -182,7 +182,7 @@ variable "managed_image_id" {
 variable "network_data" {
   type        = any
   description = "The network data needed for sessionhost connectivity."
-  default = null
+  default     = null
 }
 variable "local_admin" {
   type        = string
