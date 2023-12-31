@@ -27,6 +27,7 @@ jobs:
 # For more information on Terraform-docs, visit their site: https://terraform-docs.io
     - name: README.md generation
       uses: terraform-docs/gh-actions@main
+      continue-on-error: true
       id: tfdocs
       with:
         config-file: terraform-docs.yaml
