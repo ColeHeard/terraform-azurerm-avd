@@ -125,6 +125,10 @@ module "example" {
 | <a name="output_timezone"></a> [timezone](#output\_timezone) | The timezone selected for this pool |
 | <a name="output_token"></a> [token](#output\_token) | The hostpool token created for this pool. |
 | <a name="output_workspace"></a> [workspace](#output\_workspace) | The workspace created by this module |
+=======
+<!-- BEGIN_TF_DOCS -->
+{{ .Content }}
+
 <!-- END_TF_DOCS -->
 
 # Disclaimer
