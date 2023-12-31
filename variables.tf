@@ -5,25 +5,6 @@ variable "rg" {
   type        = string
   description = "Name of the resource group."
 }
-variable "pool_type" {
-  type        = string
-  description = "The pool type."
-  validation {
-    condition = anytrue([
-      lower(var.pool_type) == "desktop",
-      lower(var.pool_type) == "shareddesktop",
-      lower(var.pool_type) == "application"
-    ])
-    error_message = "The var.pool_type input was incorrect. Please select desktop, shareddesktop, or application."
-  }
-}
-variable "pool_number" {
-  type        = number
-  description = "The number of this pool. Use to avoid name collision."
-}
-###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
-### Variables - Optional
-###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 variable "region" {
   type        = string
   description = "The desired Azure region for the pool. See also var.region_prefix_map."
@@ -47,6 +28,25 @@ variable "region" {
     error_message = "Please select one of the approved regions: northcentralus, southcentralus, westcentral, centralus, westus, eastus, northeurope, westeurope, norwayeast, norwaywest, swedencentral, switzerlandnorth, uksouth, or ukwest."
   }
 }
+variable "pool_type" {
+  type        = string
+  description = "The pool type."
+  validation {
+    condition = anytrue([
+      lower(var.pool_type) == "desktop",
+      lower(var.pool_type) == "shareddesktop",
+      lower(var.pool_type) == "application"
+    ])
+    error_message = "The var.pool_type input was incorrect. Please select desktop, shareddesktop, or application."
+  }
+}
+variable "pool_number" {
+  type        = number
+  description = "The number of this pool. Use to avoid name collision."
+}
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
+### Variables - Optional
+###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 # An awkward limitation due to variable validation limitations: https://github.com/hashicorp/terraform/issues/25609#issuecomment-1136340278.
 variable "aad_group_desktop" {
   type        = string

@@ -14,8 +14,8 @@ locals {
 # Dynamic region and pool type naming locals. Could be organized better.
 locals {
   region_prefix    = var.region_prefix_map[var.region]
-  pool_type_prefix = var.pool_type == "desktop" ? "GEN" : (var.pool_type == "SharedDesktop" ? "PWR" : "APP")
-  prefix           = "${local.region_prefix}-${local.workspace_prefix}${local.pool_type_prefix}${format("%02d", var.pool_number)}"
+  pool_type_prefix = var.pool_type == "desktop" ? "GN" : (var.pool_type == "SharedDesktop" ? "SD" : "AP")
+  prefix           = "${local.region_prefix}${local.workspace_prefix}${local.pool_type_prefix}${format("%02d", var.pool_number)}"
 }
 # Locates unique AAD groups for application group for_each loop. 
 locals {
