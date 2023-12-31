@@ -4,8 +4,6 @@
 
 Author: Cole Heard
 
-Date: 12/10/2022
-
 Version: 1.1.0
 
 This module includes all of the hostpool specific resources needed
