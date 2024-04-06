@@ -16,27 +16,6 @@ variable "local_pass" {
   description = "The local administrator password."
   sensitive   = true
 }
-variable "local_admin" {
-  type        = string
-  description = "The local administrator username."
-  sensitive   = true
-}
-variable "local_pass" {
-  type        = string
-  description = "The local administrator password."
-  sensitive   = true
-}
-variable "domain_user" {
-  type        = string
-  description = "Username for domain join"
-  default     = null
-  sensitive   = true
-}
-variable "domain_pass" {
-  type        = string
-  description = "Password for var.domain_user"
-  sensitive   = true
-}
 variable "workspace_id" {
   type        = string
   description = "The ID of the Log Analytics Workspace that will collect the data."
