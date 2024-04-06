@@ -4,7 +4,7 @@
 
 Author: Cole Heard
 
-Version: 1.1.0
+Version: 1.1.1
 
 This module includes all of the hostpool specific resources needed
 to create a functioning Azure Virtual Desktop environment.

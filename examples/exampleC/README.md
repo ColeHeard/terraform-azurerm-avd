@@ -1,5 +1,5 @@
-# Example C - PWR
+# Example C - Persistent General Hosts
 
-This example environment demonstrates the creation of a single shared desktop ("Power") pool. 
+This example environment demonstrates the creation of two persistent personal ("General") pools.
 
-This example also demostrates that the exclusion of workspace_id and domain will skip the creation of the domain join extension (azurerm_virtual_machine_extension.domain_join_ext) and the log analytics extension (azurerm_virtual_machine_extension.mmaagent_ext). 
+Note the use of pool_number to avoid name collision. This input would also be used in conjuction with the block count property, if specified.

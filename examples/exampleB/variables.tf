@@ -1,5 +1,5 @@
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
-### Variables - Resources
+### Variables
 ###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###>-<###
 variable "rg" {
   type        = string
@@ -9,7 +9,7 @@ variable "rg" {
 variable "region" {
   type        = string
   description = "Location of the resource group."
-  default     = "northcentralus"
+  default     = "uksouth"
 }
 variable "blue_app" {
   type = map(object({
@@ -75,7 +75,7 @@ variable "yellow_app" {
     "yellowviewer" = {
       app_name     = "YellowViewer"
       local_path   = "C:\\Program Files\\YellowAppIndustries\\YellowViewer.exe"
-      cmd_argument = "Dynamics.set"
+      cmd_argument = null
       aad_group    = "SG-YellowApp-Users"
     }
     "yellowdesigner" = {
